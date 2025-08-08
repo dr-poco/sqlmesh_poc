@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SQLMesh DuckLake Tutorial
 
 This project demonstrates building a modern data lakehouse using SQLMesh, DuckDB, and DuckLake. It creates an incremental pipeline that ingests e-commerce events and produces daily revenue reports.
@@ -124,3 +125,7 @@ This project demonstrates building a modern data lakehouse using SQLMesh, DuckDB
 - Check that data directories exist and are writable
 - Verify Python virtual environment is activated
 - Use `sqlmesh plan --dry-run` to preview changes
+=======
+# sqlmesh_poc
+SQLMesh is an open-source framework for building, orchestrating, and version-controlling SQL and Python-based data pipelines with built-in scheduling, change detection, backfills, and testing—removing the need for separate tools like Airflow or dbt for many workflows.
+>>>>>>> f2a43d4465a9ce87cdd1393d2fcfe15846ad615d
