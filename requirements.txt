@@ -1,0 +1,1 @@
+sqlmesh[lsp,duckdb]>=0.80.0

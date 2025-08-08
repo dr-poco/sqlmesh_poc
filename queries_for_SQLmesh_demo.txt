@@ -1,0 +1,56 @@
+SELECT * FROM raw.events
+
+SELECT * FROM analytics__dev.daily_revenue;
+
+SELECT * FROM analytics.daily_revenue;
+
+-- Compare environments
+SELECT 
+    'dev' as env,
+    COUNT(*) as row_count
+FROM analytics__dev.daily_revenue
+UNION ALL
+SELECT 
+    'prod' as env,
+    COUNT(*) as row_count
+FROM analytics.daily_revenue;
+
+-- 1. Revenue Analysis by Date
+SELECT 
+    event_date,
+    total_revenue,
+    unique_users,
+    CASE 
+        WHEN unique_users > 0 THEN ROUND(total_revenue / unique_users, 2)
+        ELSE 0 
+    END as avg_revenue_per_user
+FROM analytics.daily_revenue
+ORDER BY event_date;
+
+-- 2. Purchase Events Analysis
+SELECT 
+    event_type,
+    COUNT(*) as event_count,
+    SUM(revenue) as total_revenue
+FROM raw.events
+GROUP BY event_type;
+
+-- 3. User Journey Analysis
+SELECT 
+    user_id,
+    COUNT(*) as total_events,
+    COUNT(CASE WHEN event_type = 'purchase' THEN 1 END) as purchases,
+    SUM(revenue) as total_spent
+FROM raw.events
+GROUP BY user_id
+ORDER BY total_spent DESC;
+
+-- 4. Time-based Analysis
+SELECT 
+    DATE(event_timestamp) as event_date,
+    HOUR(event_timestamp) as event_hour,
+    COUNT(*) as events,
+    SUM(revenue) as revenue
+FROM raw.events
+GROUP BY DATE(event_timestamp), HOUR(event_timestamp)
+ORDER BY event_date, event_hour;

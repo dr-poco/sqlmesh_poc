@@ -1,0 +1,35 @@
+# Define the connections
+gateways:
+  local_gateway:
+    connection:
+      # DuckDB is the compute engine
+      type: duckdb
+
+      # Define how DuckDB interacts with the storage and format
+      catalogs:
+        # The name we will use to reference this database
+        my_lakehouse:
+          # Specify the table format
+          type: ducklake
+
+          # Metadata Path (The Catalog Database): Where DuckLake stores table versions.
+          # In this local example, we use a DuckDB file for the catalog.
+          path: data/catalog.ducklake
+
+          # Data Path (The Object Storage): Where the actual Parquet files are stored.
+          data_path: data/storage/
+
+      # Ensure the ducklake extension is automatically loaded by DuckDB
+      extensions:
+        - ducklake
+    state_connection:
+      # State connection for SQLMesh to track model states
+      type: duckdb
+      database: 'data/sqlmesh_state.db'
+# Set the default gateway
+default_gateway: local_gateway
+
+# Default settings for models
+model_defaults:
+  dialect: duckdb
+  start: '2024-01-01'

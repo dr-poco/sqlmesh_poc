@@ -1,0 +1,60 @@
+python -m venv .venv
+
+.venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+
+sqlmesh plan dev
+
+sqlmesh fetchdf "SELECT * FROM analytics__dev.daily_revenue ORDER BY event_date"
+
+sqlmesh plan
+
+after adding data
+
+sqlmesh plan dev
+
+sqlmesh fetchdf "SELECT * FROM analytics__dev.daily_revenue ORDER BY event_date"
+
+sqlmesh table_diff prod:dev analytics.daily_revenue --show-sample
+
+sqlmesh run --ignore-cron
+
+sqlmesh plan
+
+sqlmesh table_diff prod:dev analytics.daily_revenue
+
+
+
+🚀 How to Run Without .ps1 Files:
+Manual Setup (if you remove setup.ps1):
+
+# 1. Create virtual environment
+python -m venv .venv
+
+# 2. Activate it
+.venv\Scripts\Activate.ps1
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Initialize DuckLake (using Python)
+python -c "import duckdb; conn = duckdb.connect('data/sqlmesh_state.db'); conn.execute('INSTALL ducklake'); conn.execute(\"ATTACH 'ducklake:data/catalog.ducklake' AS my_ducklake (DATA_PATH 'data/storage/')\"); conn.execute('USE my_ducklake'); conn.close()"
+
+# 5. Initialize SQLMesh
+sqlmesh migrate
+
+
+Manual Demo (if you remove demo_incremental.ps1):
+
+# Run the pipeline
+sqlmesh plan dev
+
+# Check results
+sqlmesh fetchdf "SELECT * FROM analytics__dev.daily_revenue"
+
+# Add data manually to seeds/raw_events.csv
+# Then run:
+sqlmesh plan dev
+sqlmesh run --ignore-cron
+sqlmesh plan
